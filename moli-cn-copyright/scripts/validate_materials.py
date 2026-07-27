@@ -668,8 +668,8 @@ class CopyrightValidator:
 
         # Try to extract main function section
         patterns = [
-            r'主要功能[：:](.*?)(?=\n\n|\n\d|\n开发目的|\n面向|\n技术|\Z)',
-            r'主要功能说明[：:](.*?)(?=\n\n|\n\d|\Z)',
+            r'主要功能[：:](.*?)(?=\n【|\n开发目的|\n面向|\n技术|\Z)',
+            r'主要功能说明[：:](.*?)(?=\n【|\n\d|\Z)',
         ]
         main_func = ''
         for pat in patterns:
@@ -817,13 +817,14 @@ class CopyrightValidator:
                 if 'word/document.xml' in z.namelist():
                     xml = z.read('word/document.xml').decode('utf-8', errors='ignore')
                     import re
-                    # 找到 TOC 结果区（separate 和 end 之间的文本）
-                    toc_match = re.search(r'fldCharType="separate".*?fldCharType="end"', xml, re.DOTALL)
-                    if toc_match:
-                        toc_text = toc_match.group()
-                        # 提取标题文本
-                        toc_entries = re.findall(r'<w:t[^>]*>([^<]+)</w:t>', toc_text)
-                        toc_entries = [t.strip() for t in toc_entries if t.strip()]
+                    toc_matches = re.findall(r'fldCharType="separate".*?fldCharType="end"', xml, re.DOTALL)
+                    toc_entries = []
+                    for match in toc_matches:
+                        texts = re.findall(r'<w:t[^>]*>([^<]+)</w:t>', match)
+                        for t in texts:
+                            stripped = t.strip()
+                            if stripped and not stripped.isdigit():
+                                toc_entries.append(stripped)
             
             if not actual_headings:
                 self.results.append(CheckResult("R-MA-10", True, "info", "目录与标题对齐检查", "文档中未找到标题"))
@@ -899,6 +900,15 @@ class CopyrightValidator:
         except Exception as e:
             self.results.append(CheckResult("R-MA-11", True, "info", "文档结构检查", f"无法检查: {e}"))
 
+    def _count_auto_numbered_paragraphs(self) -> int:
+        try:
+            import zipfile, re
+            with zipfile.ZipFile(self._manual_docx_path, 'r') as z:
+                xml = z.read('word/document.xml').decode('utf-8', errors='ignore')
+            return len(re.findall(r'<w:p[ >].*?<w:numPr>', xml, re.DOTALL))
+        except Exception:
+            return 0
+
     def _rule_manual_step_count(self):
         """R-MA-12: 每个功能模块编号步骤 ≥ 5 步"""
         if not self._manual_docx_path:
@@ -906,10 +916,10 @@ class CopyrightValidator:
         try:
             text = self._read_docx_text(self._manual_docx_path)
             import re
-            # 找编号步骤：行首 "数字."
-            steps = re.findall(r'^\d+\.\s+\S', text, re.MULTILINE)
-            step_count = len(steps)
-            # 找功能模块数：一级标题数
+            manual_steps = re.findall(r'^\d+\.\s+\S', text, re.MULTILINE)
+            auto_steps = self._count_auto_numbered_paragraphs()
+            step_count = max(len(manual_steps), auto_steps)
+            source = f"文本检测{len(manual_steps)} + 自动编号{auto_steps}"
             from docx import Document
             doc = Document(str(self._manual_docx_path))
             h1_count = sum(1 for p in doc.paragraphs if p.style.name.startswith('Heading 1'))
@@ -919,10 +929,10 @@ class CopyrightValidator:
             if h1_actual > 0:
                 avg_steps = step_count / h1_actual
                 passed = avg_steps >= 3 and step_count >= h1_actual * 2
-                detail = f"总{step_count}个编号步骤 / {h1_actual}个功能模块 = 均{avg_steps:.1f}步 {'✅' if passed else '❌ 建议每功能≥5步'}"
+                detail = f"总{step_count}个编号步骤({source}) / {h1_actual}个功能模块 = 均{avg_steps:.1f}步 {'✅' if passed else '❌ 建议每功能≥5步'}"
             else:
                 passed = step_count >= 5
-                detail = f"总{step_count}个编号步骤 {'✅' if passed else '❌ 建议至少5个步骤'}"
+                detail = f"总{step_count}个编号步骤({source}) {'✅' if passed else '❌ 建议至少5个步骤'}"
             
             self.results.append(CheckResult("R-MA-12", passed, "error", "功能模块编号步骤数量（建议每功能≥5步）", detail))
         except Exception as e:
@@ -935,17 +945,15 @@ class CopyrightValidator:
         try:
             text = self._read_docx_text(self._manual_docx_path)
             import re
-            # 找引号引用的UI控件："XXX"
-            controls = re.findall(r'"([^"]{2,30})"', text)
-            # 过滤掉不是UI控件名的通用引号内容
+            controls = re.findall(r'["\u201c]([^"\u201d]{2,30})["\u201d]', text)
             ui_keywords = ['按钮', '框', '区', '栏', '页', '菜单', '图标', '链接', '选项', '输入', '选择', '列表', '卡片', '提示', '窗口', '弹窗', '确认', '取消', '保存', '删除', '编辑']
             ui_controls = [c for c in controls if any(kw in c for kw in ui_keywords)]
-            
+
             control_count = len(ui_controls)
-            # 估算步骤数
             steps = re.findall(r'^\d+\.\s+\S', text, re.MULTILINE)
-            step_count = max(len(steps), 1)
-            
+            auto_steps = self._count_auto_numbered_paragraphs()
+            step_count = max(len(steps), auto_steps, 1)
+
             ratio = control_count / step_count
             passed = ratio >= 0.5 and control_count >= 3
             detail = f"UI控件引用: {control_count}处, 均{ratio:.1f}处/步 {'✅' if passed else '❌ 建议每步至少引用1个UI控件名'}"

@@ -4,6 +4,7 @@ __pycache__/
 *.egg-info/
 dist/
 *.egg
+.omo/
 
 # OS
 .DS_Store
