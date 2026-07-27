@@ -6,6 +6,7 @@
 
 | 技能 | 说明 | 状态 |
 |---|---|---|
+| `moli-apple-design` | Apple 设计语言 — 液态玻璃视觉系统 + 流体交互哲学 | ✅ |
 | `moli-cn-copyright` | AI 自动分析项目代码，生成全套软著申请材料 | ✅ |
 | `moli-cn-patent` | 专利申请材料生成 | 🔜 |
 | `moli-write-polish` | 文章润色 | 🔜 |
@@ -36,9 +37,17 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercon
 
 | Agent | 位置 | 说明 |
 |---|---|---|
-| OpenCode | `~/.config/opencode/skills/moli-cn-copyright/` | skill 即可用 |
+| OpenCode | `~/.config/opencode/skills/moli-apple-design/` | `/moli-apple-design` |
 | Claude Code | `~/.claude/plugins/moli-skills/` | 运行 `claude --plugin ~/.claude/plugins/moli-skills` |
-| Cursor / Windsurf | `cursor/rules/` | 复制到项目 `.cursor/rules/` |
+| Cursor / Windsurf | `cursor/rules/` | 复制 `.cursor/rules/moli-apple-design.mdc` |
+
+## 使用：Apple 设计系统
+
+```
+/moli-apple-design  → 构建 Apple 风格页面或设计评审
+```
+
+触发后，Agent 会进入 Build（新设计）或 Review（审查现有 UI）模式，加载液态玻璃设计系统（tokens、组件、模式）+ 流体交互哲学（弹簧动效、手势物理、中断响应）。
 
 ## 使用：软著申请
 
@@ -46,6 +55,7 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercon
 
 | 命令 | 功能 | 适用平台 |
 |---|---|---|
+| `/moli-apple-design` | Apple 设计系统 — 构建/评审 | OpenCode |
 | `/moli-cn-copyright` | 生成软著材料 | OpenCode / Claude Code |
 | `/moli-cn-copyright-validate` | 验证已生成的材料 | OpenCode |
 | `/moli-update` | 检查并升级到最新版本 | OpenCode |
@@ -114,25 +124,41 @@ pip install python-docx
 ```
 moli-skills/
 ├── instructions/           ← 共享工作流（所有 agent 可读）
+│   ├── moli-apple-design.md
 │   └── moli-cn-copyright.md
 ├── opencode/               ← OpenCode 适配层
-│   └── SKILL.md
+│   ├── SKILL.md
+│   └── moli-apple-design.md
 ├── claude/                 ← Claude Code 适配层
 │   ├── .claude-plugin/
 │   │   └── plugin.json
 │   └── skills/
-│       └── copyright/
-│           └── SKILL.md
+│       ├── copyright/
+│       │   └── SKILL.md
+│       └── validate/
 ├── cursor/                 ← Cursor / Windsurf 适配层
 │   └── rules/
+│       ├── moli-apple-design.mdc
 │       └── moli-cn-copyright.mdc
+├── moli-apple-design/      ← Apple 设计系统（视觉 + 动效）
+│   ├── SKILL.md
+│   ├── design-system.md
+│   ├── tokens.css
+│   ├── components.md
+│   ├── patterns.md
+│   ├── motion.md
+│   ├── app.md
+│   ├── icons.md
+│   ├── review.md
+│   ├── checklist.md
+│   └── reference.html
 ├── moli-cn-copyright/      ← 核心脚本与规范
-│   ├── scripts/            ← Python 辅助脚本
-│   ├── references/         ← 规范文档
-│   └── vendor/             ← DOCX 工具链
-├── ARCHITECTURE.md         ← 命令体系设计
-├── cli.py                  ← CLI 入口
-└── install.sh              ← 安装脚本
+│   ├── scripts/
+│   ├── references/
+│   └── vendor/
+├── ARCHITECTURE.md
+├── cli.py
+└── install.sh
 ```
 
 ## 许可证

@@ -16,11 +16,12 @@ cursor/rules/           ← 引用 instructions/ (🔜)
 ## 命名体系
 
 ```
-moli-<地域/领域>-<功能>
+moli-<地域/领域/风格>-<功能>
 ```
 
 | 命令 | 功能 | 状态 |
 |---|---|---|
+| `moli-apple-design` | Apple 设计语言 — 液态玻璃 + 流体交互 | ✅ |
 | `moli-cn-copyright` | 中国软著申请 | ✅ |
 | `moli-cn-patent` | 中国专利申请 | 🔜 |
 | `moli-write-polish` | 文章润色 | 🔜 |
@@ -31,13 +32,25 @@ moli-<地域/领域>-<功能>
 moli-skills/
 │
 ├── instructions/           ← 📖 共享工作流（所有 agent 的真相来源）
+│   ├── moli-apple-design.md
 │   └── moli-cn-copyright.md
 │
 ├── opencode/               ← 🔧 OpenCode 适配层
-│   └── SKILL.md
+│   ├── SKILL.md
+│   └── moli-apple-design.md
 ├── claude/                 ← 🔧 Claude Code 适配层 (🔜)
+│   ├── .claude-plugin/
+│   │   └── plugin.json
+│   └── skills/
+│       ├── copyright/
+│       │   └── SKILL.md
+│       └── validate/
 ├── cursor/                 ← 🔧 Cursor/Windsurf 适配层 (🔜)
+│   └── rules/
+│       ├── moli-apple-design.mdc
+│       └── moli-cn-copyright.mdc
 │
+├── moli-apple-design/      ← ⚙️ 设计系统（视觉 + 动效）
 ├── moli-cn-copyright/      ← ⚙️ 核心实现
 │   ├── scripts/            ← Python 辅助脚本
 │   ├── references/         ← 规范文档

@@ -65,7 +65,15 @@ try {
 }
 
 # ── 4. 注册到各平台 ──
-# OpenCode: copy to ~\.agents\skills\moli-cn-copyright\
+# OpenCode: apple-design
+$agAppleDir = "$HOME\.agents\skills\moli-apple-design"
+if (-not (Test-Path "$agAppleDir\SKILL.md")) {
+    New-Item -ItemType Directory -Force -Path $agAppleDir | Out-Null
+    Copy-Item "$InstallDir\opencode\moli-apple-design.md" "$agAppleDir\SKILL.md"
+    Write-Host "  ✅ OpenCode: /moli-apple-design" -ForegroundColor Green
+}
+
+# OpenCode: moli-cn-copyright
 $agDir = "$HOME\.agents\skills\moli-cn-copyright"
 if (-not (Test-Path "$agDir\SKILL.md")) {
     New-Item -ItemType Directory -Force -Path $agDir | Out-Null
@@ -81,12 +89,19 @@ if (-not (Test-Path "$agValDir\SKILL.md")) {
     Write-Host "  ✅ OpenCode: /moli-cn-copyright-validate" -ForegroundColor Green
 }
 
-# OpenCode (alt): copy to ~\.config\opencode\skills\moli-cn-copyright\
+# OpenCode (alt): ~\.config\opencode\skills\
 $ocDir = "$HOME\.config\opencode\skills\moli-cn-copyright"
 if (-not (Test-Path "$ocDir\SKILL.md")) {
     New-Item -ItemType Directory -Force -Path $ocDir | Out-Null
     Copy-Item -Recurse -Force "$InstallDir\opencode\*" $ocDir
     Write-Host "  ✅ OpenCode (alt): $ocDir" -ForegroundColor Green
+}
+
+$ocAppleDir = "$HOME\.config\opencode\skills\moli-apple-design"
+if (-not (Test-Path "$ocAppleDir\SKILL.md")) {
+    New-Item -ItemType Directory -Force -Path $ocAppleDir | Out-Null
+    Copy-Item "$InstallDir\opencode\moli-apple-design.md" "$ocAppleDir\SKILL.md"
+    Write-Host "  ✅ OpenCode (alt): /moli-apple-design" -ForegroundColor Green
 }
 
 # Claude Code: copy to ~\.claude\plugins\moli-skills\
@@ -96,6 +111,9 @@ if (-not (Test-Path "$ccDir\.claude-plugin\plugin.json")) {
     Copy-Item -Recurse -Force "$InstallDir\claude\*" $ccDir
     Write-Host "  ✅ Claude Code: /moli-skills:copyright" -ForegroundColor Green
 }
+
+# Cursor: copy rules
+Copy-Item "$InstallDir\cursor\rules\moli-apple-design.mdc" "$InstallDir\cursor\rules\" -Force 2>$null
 
 # ── 5. 环境变量 ──
 $envLine = [Environment]::GetEnvironmentVariable("MOLI_SKILLS_DIR", "User")

@@ -1,0 +1,32 @@
+---
+description: Apple 设计语言 — 构建 Apple 风格页面/组件、iOS 原型、设计评审。结合液态玻璃视觉系统与流体交互哲学。
+globs: "*.{html,css,jsx,tsx,vue,svelte}"
+alwaysApply: false
+---
+
+# moli-apple-design
+
+完整工作流见 `instructions/moli-apple-design.md`，读取后按步骤执行。
+
+## 工作流
+
+1. **理解设计需求** — 确认是新构建还是现有设计评审
+2. **构建模式** — 读 design-system.md → 加载 tokens.css → 选 pattern → 组合 components → 应用 motion（含交互时）→ 对照 reference.html → 运行 checklist
+3. **评审模式** — 读 review.md → 对照 design-system 评分 → 优先级排序 → 逐条修复向 reference 靠拢
+
+## 引用资源
+
+```
+moli-apple-design/
+├── SKILL.md           技能规范
+├── design-system.md   设计系统
+├── tokens.css         设计令牌
+├── components.md      组件库
+├── patterns.md        页面模式
+├── motion.md          动效规范
+├── app.md             iOS 外壳
+├── icons.md           图标集
+├── review.md          评审标准
+├── reference.html     参考渲染
+└── checklist.md       检查清单
+```
