@@ -60,6 +60,14 @@ $PYTHON -m pip install python-docx --quiet 2>/dev/null && \
     echo -e "  ${YELLOW}⚠${NC} python-docx 安装失败，DOCX 生成将降级"
 
 # ── 4. 注册到各平台 ──
+# OpenCode: apple-design
+AG_APPLE_DIR="$HOME/.agents/skills/moli-apple-design"
+if [ ! -L "$AG_APPLE_DIR/SKILL.md" ]; then
+    mkdir -p "$(dirname "$AG_APPLE_DIR")"
+    ln -sfn "$INSTALL_DIR/opencode/moli-apple-design.md" "$AG_APPLE_DIR/SKILL.md"
+    echo -e "  ${GREEN}✅${NC} OpenCode: /moli-apple-design"
+fi
+
 # OpenCode: symlink to ~/.agents/skills/moli-cn-copyright/ (for /command support)
 AG_DIR="$HOME/.agents/skills/moli-cn-copyright"
 if [ ! -L "$AG_DIR/SKILL.md" ]; then
@@ -84,13 +92,23 @@ if [ ! -L "$AG_UPD_DIR/SKILL.md" ]; then
     echo -e "  ${GREEN}✅${NC} OpenCode: /moli-update"
 fi
 
-# OpenCode (alt): symlink to ~/.config/opencode/skills/moli-cn-copyright/
+# OpenCode (alt): ~/.config/opencode/skills/
 OC_DIR="$HOME/.config/opencode/skills/moli-cn-copyright"
 if [ ! -L "$OC_DIR/SKILL.md" ]; then
     mkdir -p "$(dirname "$OC_DIR")"
     ln -sfn "$INSTALL_DIR/opencode" "$OC_DIR"
     echo -e "  ${GREEN}✅${NC} OpenCode (alt): $OC_DIR"
 fi
+
+OC_APPLE_DIR="$HOME/.config/opencode/skills/moli-apple-design"
+if [ ! -L "$OC_APPLE_DIR/SKILL.md" ]; then
+    mkdir -p "$(dirname "$OC_APPLE_DIR")"
+    ln -sfn "$INSTALL_DIR/opencode/moli-apple-design.md" "$OC_APPLE_DIR/SKILL.md"
+    echo -e "  ${GREEN}✅${NC} OpenCode (alt): /moli-apple-design"
+fi
+
+# Cursor: copy rules
+cp "$INSTALL_DIR/cursor/rules/moli-apple-design.mdc" "$INSTALL_DIR/cursor/rules/" 2>/dev/null || true
 
 # Claude Code: symlink to ~/.claude/plugins/moli-skills/
 CC_DIR="$HOME/.claude/plugins/moli-skills"
