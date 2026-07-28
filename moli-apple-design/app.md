@@ -4,6 +4,24 @@ The core skill is desktop-web scale (720/1080 containers, hover lift). An **App 
 
 > Read this when the task is "an app / iOS screen / mobile mockup / app 原型." Use the core files (`design-system.md`, `components.md`) for the *content*; use this file for the *shell around it*.
 
+## Navigation Bar Style — Liquid Glass / Vibrancy Effect
+
+The dominant navigation bar style in the Apple ecosystem after WWDC 2020 is the **Vibrancy Effect Navigation Bar** (also referred to as Liquid Glass navigation bar within this skill). This is the standard for iOS and iPadOS native apps and is increasingly adopted in macOS.
+
+Apple classifies this under three interrelated system technologies:
+
+| Apple Official Term | What It Does | Role in Navigation Bar |
+|---|---|---|
+| **Vibrancy Effect** (活力感) | Adds visual texture and color adaptation so UI elements "breathe" over the background content. In navigation bars it creates the illusion that the bar is alive and responding to what scrolls beneath it. | Overall visual quality of the bar |
+| **Ultra-Thin Material** (超薄材质) | One of Apple's material density tiers (Ultra-Thin / Thin / Prominent / Regular). The navigation bar uses **Ultra-Thin** — the lightest, most translucent tier — so the bar feels present but never heavy. Visual effect: `background: rgba(255,255,255,0.6)` with `backdrop-filter: blur()`. | Base material of the bar |
+| **Visual Effect View with Blending** | Apple's `UIVisualEffectView` that composites the bar using layer blending. The standard recipe is a glass layer over a gradient background (`linear-gradient(180deg, ...)`) that creates a subtle edge fade — the bar isn't a uniform rectangle but a surface that merges into the content below. | The compositing technique |
+| **Large Title Navigation Bar** (大标题导航) | The signature iOS navigation pattern — a large, bold, negatively tracked title at rest that collapses into a compact centered title as the user scrolls. The compact bar uses the Ultra-Thin Material with Vibrancy, while the large title sits on the plain page ground. | The structural pattern |
+| **Variable Toolbar** (可变工具栏) | A bar that can appear/disappear or change its content based on scroll position or context. Examples: Safari's bottom toolbar that hides on scroll, or a reader view that swaps toolbar icons. It shares the same Ultra-Thin Material + Vibrancy treatment as the navigation bar. | Context-responsive bar |
+
+Implementations of this navigation bar style typically use component classes such as `nav-bar`, `lg-nav`, `lg-glass`, `nav-glass` to compose the layering: an outer container (`lg-glass`) providing the Vibrancy backdrop, an inner gradient overlay simulating the Visual Effect View blending, and a content slot for the actual navigation controls.
+
+**Key qualification:** This is a Liquid Glass treatment — glass (frosted backdrop) is appropriate here because layers *truly overlap* (scrolling content passes beneath the fixed nav bar). The glass terminates at the bottom edge with either a hairline or a scroll-edge fade, never a hard border.
+
 ## Iron rule — never hand-roll the device frame
 
 ```
@@ -117,6 +135,7 @@ sc.addEventListener('scroll',()=>nc.classList.toggle('show', sc.scrollTop>44),{p
 
 ## App self-check
 - [ ] Device frame from exact spec (island centered, home above overlays).
+- [ ] Navigation bar uses Ultra-Thin Material + Vibrancy treatment (Liquid Glass style).
 - [ ] Large title collapses to compact glass bar on scroll.
 - [ ] Tab bar: glass, safe-area bottom, exactly one accent tab, real icons.
 - [ ] Bottom sheet: edge-anchored, grab handle, top-rounded; reduced-motion handled.

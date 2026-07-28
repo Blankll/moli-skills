@@ -1531,7 +1531,23 @@ Apple 的页面布局遵循一种可预测的节奏，类似于音乐中的小�
 
 > 完整内容见 `app.md`。
 
-### 17.1 铁律
+### 17.1 导航栏风格声明
+
+此技能涵盖 Apple 移动端导航栏的主流风格体系。请读者在实现时注意区分和遵循：
+
+| 风格 | Apple 官方术语 | 说明 |
+|---|---|---|
+| **液态玻璃导航栏** | Vibrancy Effect / Liquid Glass Navigation | 导航栏采用毛玻璃（`backdrop-filter`）处理，内容在下方滚动时玻璃产生折射和色彩适应效果。这是 iOS 标配导航风格 |
+| **超薄材质** | Ultra-Thin Material | Apple 材质密度体系中最轻的一级，导航栏基材使用最高透明度——`rgba(255,255,255,0.6)` + `blur()`，使导航栏"存在但不沉重" |
+| **视觉效果叠加** | Visual Effect View with Blending | 导航栏不是单一矩形，而是玻璃层叠加渐变背景（`linear-gradient(180deg, ...)`），形成边缘渐隐融合的复合表面 |
+| **大标题导航** | Large Title Navigation Bar | iOS 标志性模式——大尺寸粗体标题（负字距）在静止状态展示，滚动后折叠为紧凑居中标题栏 |
+| **可变工具栏** | Variable Toolbar | 根据滚动位置或上下文动态显隐/变容的工具栏，共享同套 Ultra-Thin Material + Vibrancy 处理 |
+
+典型实现使用 `nav-bar` / `lg-nav` / `lg-glass` / `nav-glass` 等 class 组合来构建层级：外层容器提供 Vibrancy 背板，内侧渐变层模拟 Visual Effect View 混合，内容槽承载实际导航控件。
+
+> **原则：** 导航栏适用玻璃处理——因为它属于"图层真实重叠"场景（内容在固定导航栏下方滚动）。玻璃底部以发丝线或滚动边缘渐隐结束，不出现硬边框。
+
+### 17.2 铁律
 
 **不要手绘设备框架。** 使用以下精确值（iPhone 15 Pro / 16 / 15 逻辑点）：
 
