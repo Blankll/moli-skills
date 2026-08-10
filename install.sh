@@ -14,9 +14,11 @@ echo -e "  ${BLUE}ℹ${NC} 自动下载最新 Release 版本"
 
 # ── 1. 检测 Python ──
 PYTHON=""
-for cmd in python3 python; do
+# 优先查找显式版本（Homebrew 等安装的 python3.10+），再回退到 python3/python
+for cmd in python3.14 python3.13 python3.12 python3.11 python3.10 python3 python; do
     if command -v "$cmd" &>/dev/null; then
-        VER=$("$cmd" --version 2>&1 | grep -oP '\d+\.\d+' | head -1)
+        # macOS BSD grep 不支持 -oP，用 -oE + POSIX 字符类
+        VER=$("$cmd" --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
         if awk "BEGIN {exit !($VER >= 3.10)}" 2>/dev/null; then
             PYTHON="$cmd"
             break
@@ -55,7 +57,11 @@ echo -e "  ${GREEN}✅${NC} 版本: $VERSION"
 
 # ── 3. 安装依赖 ──
 echo -e "  ${BLUE}ℹ${NC} 安装 python-docx..."
-$PYTHON -m pip install python-docx --quiet 2>/dev/null && \
+# PEP 668 (externally-managed-environment) 下 Homebrew/系统 Python 拒绝裸 pip 安装，
+# 依次回退：--user → --break-system-packages
+$PYTHON -m pip install python-docx --quiet 2>/dev/null || \
+$PYTHON -m pip install python-docx --quiet --user 2>/dev/null || \
+$PYTHON -m pip install python-docx --quiet --break-system-packages 2>/dev/null && \
     echo -e "  ${GREEN}✅${NC} python-docx" || \
     echo -e "  ${YELLOW}⚠${NC} python-docx 安装失败，DOCX 生成将降级"
 

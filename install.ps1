@@ -7,8 +7,9 @@ $InstallDir = if ($env:MOLI_SKILLS_DIR) { $env:MOLI_SKILLS_DIR } else { "$HOME\.
 Write-Host "━━━ 墨吏 moli-skills 安装 ━━━" -ForegroundColor Blue
 
 # ── 1. 检测 Python ──
+# Windows 通常没有 python3，需优先尝试 py launcher（py -3.x）
 $python = $null
-foreach ($cmd in @("python3", "python")) {
+foreach ($cmd in @("py -3.14", "py -3.13", "py -3.12", "py -3.11", "py -3.10", "python3", "python")) {
     try {
         $ver = & $cmd --version 2>&1
         if ($ver -match "(\d+)\.(\d+)") {
