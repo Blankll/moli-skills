@@ -98,6 +98,14 @@ if [ ! -L "$AG_UPD_DIR/SKILL.md" ]; then
     echo -e "  ${GREEN}✅${NC} OpenCode: /moli-update"
 fi
 
+# OpenCode compliance command
+AG_CHK_DIR="$HOME/.agents/skills/moli-write-check"
+if [ ! -L "$AG_CHK_DIR/SKILL.md" ]; then
+    mkdir -p "$(dirname "$AG_CHK_DIR")"
+    ln -sfn "$INSTALL_DIR/opencode/moli-write-check" "$AG_CHK_DIR"
+    echo -e "  ${GREEN}✅${NC} OpenCode: /moli-write-check"
+fi
+
 # OpenCode (alt): ~/.config/opencode/skills/
 OC_DIR="$HOME/.config/opencode/skills/moli-cn-copyright"
 if [ ! -L "$OC_DIR/SKILL.md" ]; then
@@ -111,6 +119,13 @@ if [ ! -L "$OC_APPLE_DIR/SKILL.md" ]; then
     mkdir -p "$(dirname "$OC_APPLE_DIR")"
     ln -sfn "$INSTALL_DIR/opencode/moli-apple-design.md" "$OC_APPLE_DIR/SKILL.md"
     echo -e "  ${GREEN}✅${NC} OpenCode (alt): /moli-apple-design"
+fi
+
+OC_CHK_DIR="$HOME/.config/opencode/skills/moli-write-check"
+if [ ! -L "$OC_CHK_DIR/SKILL.md" ]; then
+    mkdir -p "$(dirname "$OC_CHK_DIR")"
+    ln -sfn "$INSTALL_DIR/opencode/moli-write-check" "$OC_CHK_DIR"
+    echo -e "  ${GREEN}✅${NC} OpenCode (alt): /moli-write-check"
 fi
 
 # Cursor: copy rules

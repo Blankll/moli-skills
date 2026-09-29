@@ -23,6 +23,7 @@ moli-<地域/领域/风格>-<功能>
 |---|---|---|
 | `moli-apple-design` | Apple 设计语言 — 液态玻璃 + 流体交互 | ✅ |
 | `moli-cn-copyright` | 中国软著申请 | ✅ |
+| `moli-write-check` | 自媒体文案合规检测与改写 | ✅ |
 | `moli-cn-patent` | 中国专利申请 | 🔜 |
 | `moli-write-polish` | 文章润色 | 🔜 |
 
@@ -33,7 +34,8 @@ moli-skills/
 │
 ├── instructions/           ← 📖 共享工作流（所有 agent 的真相来源）
 │   ├── moli-apple-design.md
-│   └── moli-cn-copyright.md
+│   ├── moli-cn-copyright.md
+│   └── moli-write-check.md
 │
 ├── opencode/               ← 🔧 OpenCode 适配层
 │   ├── SKILL.md
@@ -55,6 +57,9 @@ moli-skills/
 │   ├── scripts/            ← Python 辅助脚本
 │   ├── references/         ← 规范文档
 │   └── vendor/             ← 第三方工具链
+├── moli-write-check/  ← ⚙️ 合规词库 + 检测脚本
+│   ├── scripts/            ← detect.py（零依赖词库匹配）
+│   └── references/         ← 分平台 TSV 词库
 │
 ├── AGENTS.md               ← 兼容性说明
 ├── ARCHITECTURE.md         ← 本文件

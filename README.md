@@ -8,6 +8,7 @@
 |---|---|---|
 | `moli-apple-design` | Apple 设计语言 — 液态玻璃视觉系统 + 流体交互哲学 | ✅ |
 | `moli-cn-copyright` | AI 自动分析项目代码，生成全套软著申请材料 | ✅ |
+| `moli-write-check` | 自媒体文案合规检测与改写（敏感词/违禁词/限流词） | ✅ |
 | `moli-cn-patent` | 专利申请材料生成 | 🔜 |
 | `moli-write-polish` | 文章润色 | 🔜 |
 
@@ -59,6 +60,7 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercon
 | `/moli-cn-copyright` | 生成软著材料 | OpenCode / Claude Code |
 | `/moli-cn-copyright-validate` | 验证已生成的材料 | OpenCode |
 | `/moli-update` | 检查并升级到最新版本 | OpenCode |
+| `/moli-write-check` | 敏感词/违禁词检测 + 合规改写 | OpenCode / Claude Code |
 | `/moli-skills:validate` | 验证已生成的材料 | Claude Code |
 
 ### 工作流
@@ -156,6 +158,9 @@ moli-skills/
 │   ├── scripts/
 │   ├── references/
 │   └── vendor/
+├── moli-write-check/  ← 合规词库 + 检测脚本
+│   ├── scripts/
+│   └── references/wordlists/
 ├── ARCHITECTURE.md
 ├── cli.py
 └── install.sh
