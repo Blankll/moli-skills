@@ -51,7 +51,7 @@ python3 "$DETECT" --file <文案路径> --platform all
 
 ## Step 4: Context Review(L3 上下文判断,Agent 负责)
 
-逐条核对以下清单,每条发现都标注:位置、风险类型、严重度(block/risk/caution)、理由。词库命中的词条如果语境安全可降级,在报告中说明。
+逐条核对以下清单,每条发现都标注:位置、风险类型、严重度(block/risk/caution)、理由。词库命中的词条如果语境安全可降级,在报告中说明。判断依据:官方平台规范(小红书快照见 `moli-write-check/references/platform-rules/`,微信/抖音以官方最新版为准)、`《广告法》`原文;来源与词库维护约定见 `moli-write-check/references/SOURCES.md`。
 
 | # | 检查项 | 判断要点 |
 |---|---|---|
@@ -106,5 +106,6 @@ docs/moli/compliance-v1/
 1. **脚本是工具,不是流程**——detect.py 只做确定性词面匹配;语境判断、改写、结论由 Agent 负责
 2. **文案不出本机**——词库检测纯本地执行,不调用任何外部检测 API
 3. **词库是起点**——平台规则更新频繁,词库见 `moli-write-check/references/wordlists/`,修改时同步维护其 README 的约定
-4. **报告版本可追溯**——同一文案多轮检测走 `compliance-v1/`、`compliance-v2/` 递增,不静默覆盖
-5. **不替用户做商业决定**——caution 级风险一律交用户拍板,Agent 只提供后果说明
+4. **机器对齐,人定级**——扩充词库时用 `scripts/import_wordlist.py` 对外部词表去重生成待审草稿,逐条定级后再入 TSV;来源与 license 登记在 `references/SOURCES.md`;审核类词与高误报泛词有意不入库,理由见该文件
+5. **报告版本可追溯**——同一文案多轮检测走 `compliance-v1/`、`compliance-v2/` 递增,不静默覆盖
+6. **不替用户做商业决定**——caution 级风险一律交用户拍板,Agent 只提供后果说明
