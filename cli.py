@@ -25,11 +25,6 @@ REPO = "geek-fun/moli-skills"
 def cmd_validate(args: argparse.Namespace) -> int:
     """运行软著材料合规验证"""
     sys.path.insert(0, str(SKILLS_DIR / "moli-cn-copyright" / "scripts"))
-
-
-def cmd_validate(args: argparse.Namespace) -> int:
-    """运行软著材料合规验证"""
-    sys.path.insert(0, str(SKILLS_DIR / "moli-cn-copyright" / "scripts"))
     try:
         from validate_materials import CopyrightValidator
     except ImportError as e:
@@ -65,6 +60,13 @@ def main() -> int:
 
     sub = parser.add_subparsers(dest="command")
     sub.required = True
+
+    # update / check-update
+    update = sub.add_parser("update", help="升级到最新版本")
+    update.set_defaults(func=cmd_update, check=False)
+
+    check = sub.add_parser("check-update", help="检查是否有新版本")
+    check.set_defaults(func=cmd_update, check=True)
 
     # copyright
     cp = sub.add_parser("copyright", help="软著申请相关命令")
@@ -156,28 +158,6 @@ def _do_update(check_only: bool = False) -> int:
         if temp_dir.exists():
             shutil.rmtree(temp_dir)
         return 1
-
-
-def main() -> int:
-    parser = argparse.ArgumentParser(
-        description=f"墨吏 v{VERSION} — AI 文书技能集",
-    )
-    parser.add_argument("--version", action="version", version=f"moli v{VERSION}")
-
-    sub = parser.add_subparsers(dest="command")
-    sub.required = True
-
-    # update / check-update
-    update = sub.add_parser("update", help="升级到最新版本")
-    update.set_defaults(func=cmd_update, check=False)
-
-    check = sub.add_parser("check-update", help="检查是否有新版本")
-    check.set_defaults(func=cmd_update, check=True)
-
-    # copyright
-    cp = sub.add_parser("copyright", help="软著申请相关命令")
-    cp_sub = cp.add_subparsers(dest="action")
-    cp_sub.required = True
 
 
 if __name__ == "__main__":
